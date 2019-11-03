@@ -1,4 +1,6 @@
-# Utilities-JSHOP2
+# Utility-Aware SHOP (UASHOP)
+
+_This is a fork of the JSHOP2 library which can be downloaded from: https://sourceforge.net/projects/shop _
 
 How to install and run JSHOP2:
 
