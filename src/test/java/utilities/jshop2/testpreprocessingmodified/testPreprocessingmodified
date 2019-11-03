@@ -1,0 +1,71 @@
+(defdomain testpreProcessingmodified (
+  (:operator (!a ?v ?l) () () ((at ?v ?l)) 2)
+  (:operator (!b ?bb ?l) () () ((at ?bb ?l)) 3)
+  (:operator (!c ?v ?y ?z) () ((at ?y) (at ?v ?y)) ((at ?z) (at ?v ?z)) 3)
+  (:operator (!d ?o ?n) () ((have ?o)) ((have ?n)) 5)
+  (:operator (!e ?h ?t) () ((at ?h)) ((at ?t)) 8)
+  (:operator (!f ?h ?t) () ((at ?h)) ((have ?o)) 10)
+
+
+
+  (:method (AA ?r)
+      ((have ?m) ((call >= ?m ?r)))
+      ((CC ?r) (!f ?m (call - ?m ?r))))
+
+  (:method (AA ?x)
+  ((at ?x) (walking-distance ?x ?y))
+  ((!a ?x ?y)(!d ?x ?y))
+  )
+
+  (:method (AA ?x)
+    ((at ?x) (bus-route ?bus ?x ?y))
+    ((CC ?x)(DD ?x ?y)(!f ?x ?y))
+    )
+
+  (:method (CC ?x)
+       ((short-distance ?x ?y) (bus-route ?bus ?x ?y))
+       ((!e ?x ?y)(!a ?x ?y))
+       )
+
+  (:method (DD ?x)
+         ()
+         ((!b ?x ?y))
+         )
+
+  (:method (DD ?x)
+           ((walking-distance ?x ?y) (bus-route ?bus ?x ?y))
+           ((!a ?x ?y)(!d ?x ?y))
+           )
+
+  (:method (BB ?q)
+    ((at ?p) (walking-distance ?p ?q))
+    ((!e ?p ?q)))
+
+ (:method (BB ?y)
+     (:first ((at ?x)
+      (at-taxi-stand ?t ?x)
+      (distance ?x ?y ?d)
+      (have-t ?d)))
+    ((!a ?t ?x) (!c ?t ?x ?y)
+      (AA (call + 1.50 ?d))))
+
+ (:method (BB ?y)
+     ((at ?x) (bus-route ?bus ?x ?y) )
+    ((!b ?bus ?x)
+      (AA 1.00)
+      (!c ?bus ?x ?y)))
+
+
+  (:- (have-t ?distance)
+      ((have-cash ?m) (call >= ?m (call + 1.5 ?distance))))
+
+  (:- (walking-distance ?u ?v)
+      ((weather-is good) (distance ?u ?v ?w) (call <= ?w 3))
+      ((distance ?u ?v ?w) (call <= ?w 0.5)))
+
+   (:- (short-distance ?u ?v)
+         ((weather-is good) (distance ?u ?v ?w) (call <= ?w 40))
+         ((distance ?u ?v ?w) (call <= ?w 20)))
+
+
+      ))

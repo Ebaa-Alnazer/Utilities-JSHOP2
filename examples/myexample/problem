@@ -1,0 +1,8 @@
+(defproblem problem myexample
+((at downtown)
+(weather-is good) (have-cash 15) (distance downtown park 2) (distance downtown uptown 8)
+(distance downtown suburb 12) (at-taxi-stand taxi1 downtown) (at-taxi-stand taxi2 downtown)
+(bus-route bus1 downtown park) (bus-route bus2 downtown uptown) (bus-route bus3 downtown suburb))
+
+((travel-to suburb))
+)

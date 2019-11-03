@@ -1,0 +1,60 @@
+(defdomain myexample (
+  (:operator (!hail ?vehicle ?location) () () ((at ?vehicle ?location)) 2)
+  (:operator (!wait-for ?bus ?location) () () ((at ?bus ?location)) 3)
+  (:operator (!ride ?vehicle ?a ?b) () ((at ?a) (at ?vehicle ?a)) ((at ?b) (at ?vehicle ?b)) 3)
+  (:operator (!set-cash ?old ?new) () ((have-cash ?old)) ((have-cash ?new)))
+  (:operator (!walk ?here ?there) () ((at ?here)) ((at ?there)))
+  (:operator (!fly ?x ?y) ()((at ?x)) ((at ?y)))
+
+
+
+  (:method (pay-driver ?fare)
+      ((have-cash ?m) ((call >= ?m ?fare)))
+      ((!set-cash ?m (call - ?m ?fare))))
+
+  (:method (travel-to ?q)
+    ((at ?p) (walking-distance ?p ?q))
+    ((!walk ?p ?q)))
+
+ (:method (travel-to ?y)
+     (:first ((at ?x)
+      (at-taxi-stand ?t ?x)
+      (distance ?x ?y ?d)
+      (have-taxi-fare ?d)))
+    ((!hail ?t ?x) (!ride ?t ?x ?y)
+      (pay-driver (call + 1.50 ?d))))
+
+ (:method (travel-to ?y)
+     ((at ?x) (bus-route ?bus ?x ?y) )
+    ((!wait-for ?bus ?x)
+      (pay-driver 1.00)
+      (!ride ?bus ?x ?y)))
+
+  (:method (travel-to ?y)
+  ((at ?x))
+  ((get-tickets ?x ?y) ))
+
+  (:method (get-tickets ?x ?y)
+  ()
+  ((pay-driver 100))
+  )
+
+  (:method (get-tickets ?x ?y)
+     ((at ?x) (short-distance ?x ?z))
+     ((travel-to ?z) (pay-driver 10))
+  )
+
+
+  (:- (have-taxi-fare ?distance)
+      ((have-cash ?m) (call >= ?m (call + 1.5 ?distance))))
+
+  (:- (walking-distance ?u ?v)
+      ((weather-is good) (distance ?u ?v ?w) (call <= ?w 3))
+      ((distance ?u ?v ?w) (call <= ?w 0.5)))
+
+   (:- (short-distance ?u ?v)
+         ((weather-is good) (distance ?u ?v ?w) (call <= ?w 40))
+         ((distance ?u ?v ?w) (call <= ?w 20)))
+
+
+      ))

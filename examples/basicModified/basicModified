@@ -1,0 +1,14 @@
+; This extremely simple example shows some of the most essential
+; features of SHOP2.
+
+(defdomain basicModified (
+  (:operator (!pickup ?a) () () ((have ?a)) 2)
+  (:operator (!drop ?a) ((have ?a)) ((have ?a)) ())
+
+  (:method (swap ?x ?y)
+    ((have ?x) (not (have ?y)))
+    ((!drop ?x) (!pickup ?y)))
+
+  (:method (swap ?x ?y)
+    ((have ?y) (not (have ?x)))
+    ((!drop ?y) (!pickup ?x)))))
